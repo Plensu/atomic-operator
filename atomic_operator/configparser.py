@@ -129,6 +129,7 @@ class ConfigParser(Base):
     def __create_remote_host_object(
         self,
         hostname=None,
+        platform=None,
         username=None,
         password=None,
         ssh_key_path=None,
@@ -139,6 +140,7 @@ class ConfigParser(Base):
     ):
         return Host(
             hostname=hostname,
+            platform=platform,
             username=username,
             password=password,
             ssh_key_path=ssh_key_path,
