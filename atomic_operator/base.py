@@ -155,8 +155,9 @@ Inputs for {title}:
                 if test.executor.name == key:
                     for k, v in val.items():
                         for input in test.input_arguments:
-                            if k in input.default:
-                                input.value = input.default.replace(k, v)
+                            if input.type == 'path':
+                                if k in input.default:
+                                    input.value = input.default.replace(k, v)
             for input in test.input_arguments:
                 if input.value == None:
                     input.value = input.default
