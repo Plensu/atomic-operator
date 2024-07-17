@@ -110,8 +110,6 @@ class AtomicOperator(Base):
             config_args = self.__config_parser.get_inputs(test.auto_generated_guid)
             if config_args:
                 self._set_input_arguments(test, **config_args)
-            if test.auto_generated_guid not in self.__test_responses:
-                self.__test_responses[test.auto_generated_guid] = {}
             if technique.hosts:
                 for host in technique.hosts:
                     if host.platform in self.SUPPORTED_PLATFORMS:
