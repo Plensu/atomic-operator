@@ -85,7 +85,7 @@ class ConfigParser(Base):
                 self.__host_list.append(
                     self.__create_remote_host_object(
                         hostname=host,
-                        platform=host_dict(host),
+                        platform=host_dict[host],
                         username=username,
                         password=password,
                         ssh_key_path=ssh_key_path,
