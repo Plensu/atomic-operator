@@ -114,55 +114,56 @@ class AtomicOperator(Base):
                 self.__test_responses[test.auto_generated_guid] = {}
             if technique.hosts:
                 for host in technique.hosts:
-                    if host.platform in test.supported_platforms and host.platform in self.SUPPORTED_PLATFORMS:
-                        if test.auto_generated_guid not in self.__test_responses:
-                            self.__test_responses[test.auto_generated_guid] = {}
-                        self.__logger.info(
-                            f"Running {test.name} test ({test.auto_generated_guid}) for technique {technique.attack_technique}"
-                        )
-                        self.__logger.debug(f"Description: {test.description}")
-                        self.__logger.debug(f"Running test on {host.platform} platform.")
-                        # TODO: Need to add support for copy of files to remote hosts.
-                        path = technique.path
-                        if host.platform == "windows":
-                            path = "c:\\temp"
-                        elif host.platform == "linux" or host.platform == "macos" or host.platform == "aws":
-                            path = "/tmp"
-                        else:
-                            raise PlatformNotSupportedError(
-                                provided_platform=host.platform, supported_platforms=self.SUPPORTED_PLATFORMS
-                            )
-                        self.__logger.debug(f"The original execution command is '{test.executor.command}'.")
-                        new_command = self._replace_command_string(
-                            command=test.executor.command,
-                            path=path,
-                            input_arguments=test.input_arguments,
-                            executor=test.executor.name,
-                        )
-                        self.__logger.debug(f"Newly formatted execution command is '{new_command}'.")
-                        runner = Runner(
-                            platform=host.platform,
-                            hostname=host.hostname,
-                            username=host.username,
-                            password=host.password,
-                            verify_ssl=host.verify_ssl,
-                            ssh_key_path=host.ssh_key_path,
-                            private_key_string=host.private_key_string,
-                            ssh_port=host.port,
-                            ssh_timeout=host.timeout,
-                        )
-                        for response in runner.run(
-                            command=new_command,
-                            executor=test.executor.name,
-                            elevation_required=test.executor.elevation_required,
-                        ):
-                            self.__test_responses[test.auto_generated_guid].update(
-                                {
-                                    "technique_id": technique.attack_technique,
-                                    "technique_name": technique.display_name,
-                                    "response": response,
-                                }
-                            )
+                    if host.platform in self.SUPPORTED_PLATFORMS:
+                        if host.platform in test.supported_platforms:
+                            if test.auto_generated_guid not in self.__test_responses:
+                                self.__test_responses[test.auto_generated_guid] = {}
+                                self.__logger.info(
+                                    f"Running {test.name} test ({test.auto_generated_guid}) for technique {technique.attack_technique}"
+                                )
+                                self.__logger.debug(f"Description: {test.description}")
+                                self.__logger.debug(f"Running test on {host.platform} platform.")
+                                # TODO: Need to add support for copy of files to remote hosts.
+                                path = technique.path
+                                if host.platform == "windows":
+                                    path = "c:\\temp"
+                                elif host.platform == "linux" or host.platform == "macos" or host.platform == "aws":
+                                    path = "/tmp"
+                                else:
+                                    raise PlatformNotSupportedError(
+                                        provided_platform=host.platform, supported_platforms=self.SUPPORTED_PLATFORMS
+                                    )
+                                self.__logger.debug(f"The original execution command is '{test.executor.command}'.")
+                                new_command = self._replace_command_string(
+                                    command=test.executor.command,
+                                    path=path,
+                                    input_arguments=test.input_arguments,
+                                    executor=test.executor.name,
+                                )
+                                self.__logger.debug(f"Newly formatted execution command is '{new_command}'.")
+                                runner = Runner(
+                                    platform=host.platform,
+                                    hostname=host.hostname,
+                                    username=host.username,
+                                    password=host.password,
+                                    verify_ssl=host.verify_ssl,
+                                    ssh_key_path=host.ssh_key_path,
+                                    private_key_string=host.private_key_string,
+                                    ssh_port=host.port,
+                                    ssh_timeout=host.timeout,
+                                )
+                                for response in runner.run(
+                                    command=new_command,
+                                    executor=test.executor.name,
+                                    elevation_required=test.executor.elevation_required,
+                                ):
+                                    self.__test_responses[test.auto_generated_guid].update(
+                                        {
+                                            "technique_id": technique.attack_technique,
+                                            "technique_name": technique.display_name,
+                                            "response": response,
+                                        }
+                                    )
                     else:
                         raise PlatformNotSupportedError(
                             provided_platform=host.platform, supported_platforms=self.SUPPORTED_PLATFORMS
