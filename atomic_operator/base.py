@@ -194,4 +194,4 @@ Inputs for {title}:
         try:
             getattr(getattr(parent, f"_{component}__logger"), level)(message)
         except AttributeError as ae:
-            getattr(self.__logger, level)(message + ae)
+            getattr(self.__logger, level)(message + str(ae))
